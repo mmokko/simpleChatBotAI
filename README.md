@@ -8,10 +8,10 @@ Based on email spam classifier algorithm.
 3. Create cross validation set.
 4. Create test set.
 5. Decide what algorithm should be used.
-   * Better to start with quick algorith to test how it all works.
+   * Better to start with quick algorithm to test how it all works.
 6. Run your algorithm with training date to get as small as possible cost function.
 7. Run againt cross validation set.
-   * Optimaze algorithm using cross validation resuts.
+   * Optimize algorithm using cross validation resuts.
    * Iterate.
 8. Test againt test data.
 
@@ -33,7 +33,7 @@ Create feature vector from received sentence:
 Vector contains boolean value for all blocked words, so we get vector nx1.  
 If blocked word appears in the sentence then the boolean value in the feature vector would be set to true (1).  
 Example:  
-Blocked words: "work", "git", "story", "backlog".  
+Blocked words: "work", "git", "story", "backlog" (n = 4)
 Sentence: "I added new story to our backlog."  
 Feature vector:  
 
@@ -42,26 +42,26 @@ Feature vector:
 This is the input value to machine learning algorithm.  
 
 ### Variables
-x = features of email  
+x = features of sentences (e-mail, chat...) 
 y = boolean classifier: block (1) or don't block (0)  
 n = number of features  
 m = number of training examples  
-theta =  weight variable
+theta =  weight variable (this is the value calculated by the learning algorithm)
 
 ## Algorithm
-### Initializing the algorithm.
+### Initializing the algorithm (learning)
 1. Create vocabulary list.
-   * Find out 10 most used words in training data.
+   * Find out n most used words in training data.
    * Every word has an index in the list.
 2. Create matrix X from training data.
    * Feature vector for all training examples (matrix of mxn).
-3. Create classifier vector y (vector mx1)
+3. Create classifier vector y (vector mx1). These are the valid results to train on.
 4. Calculate cost function and gradient
-   * Initialize Theta to random values.
+   * Initialize theta to random values.
 5. Calculate optimal theta using minimize function.
    * For example in python use scipy and Newton Conjugate Gradient.
 
-### Using the algorithm
+### Using the algorithm (predicting)
 1. Create feature vector of the received message.
 2. Calculate y using optimal theta.
 3. Create predict function to decide if the output is positive or negative.

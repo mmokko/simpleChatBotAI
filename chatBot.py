@@ -12,15 +12,15 @@ def sigmoid(z):
 class LearningAlgorithm(object):
     def __init__(self):
         self._X = numpy.zeros(0)        # Matrix (m x n) - these will be the m rows of input features for training 
-                                        #                  (1 = , 0 = keyword not present)
+                                        #                  (1 = keyword present, 0 = keyword not present)
         self._y = numpy.zeros(0)        # Vector (m) - these will be the m results (1 = blocked, 0 = not blocked)
         self._theta = numpy.zeros(0)    # Vector (n) - these will be the coefficients that we optimise
-        self._common_words = list()     # These will be the list on n words that we will use as features
+        self._common_words = list()     # These will be the list on n keywords that we will use as features
 
     # This function finds the n most common words on the training data :) 
     # These "common words" are our feature set.
     # What this function does is
-    # 1) Gets on sentence in training data
+    # 1) Gets one sentence in training data
     # 2) Separates each sentence into words
     # 3) Normalises word by lowercasing and stemming (see note below)
     # 4) Counts occurences of each word in a dictionary of words
@@ -61,8 +61,8 @@ class LearningAlgorithm(object):
                     x[self._common_words.index(word)] = 1
             self._X[i,:] = x
 
-    # This function takes all the steps to fill in the matrix X from the training data
-    # 1) dimension to right size (m, n)
+    # This function takes all the steps to fill in the matrix X(m, n) from the training data
+    # 1) dimension X to right size (m, n)
     # 2) fill in _common_words to be used in next step
     # 3) call _findFeatureVector to get X filled with 0 and 1's (see explanation above)
     def _createTrainingInputMatrix(self, trainingData):
@@ -70,7 +70,7 @@ class LearningAlgorithm(object):
         self._common_words = self.findMostCommonWords(trainingData)
         self._findFeatureVector(trainingData)
 
-    # This function fills in the vector y from the training data, quite simply 
+    # This function fills in the vector y(m) from the training data, quite simply 
     # copies whether the sentence was to be blocked (1) or not (0)
     def _createTrainingOutputVector(self, trainingData):
         self._y.resize(trainingData.m)
@@ -80,8 +80,8 @@ class LearningAlgorithm(object):
 
     # This is the cost function that we are trying to minimise.
     # Basically it is used to compute "how far" our current model parameters (theta) 
-    # are from predicting the values (y) on the training data (X). The 
-    # perfect match would be when cost is zero.
+    # are from predicting the output values (y) on the training data inputs (X). 
+    # The perfect match would be a cost of zero.
     # For more info about this equation, check "cross-entropy" or "log loss" 
     # cost function
     @staticmethod
@@ -95,6 +95,7 @@ class LearningAlgorithm(object):
     # This is the gradient function used to "step" our model parameters (theta) 
     # to get us closer to an optimal point (the function we are trying to mimimise)
     # It uses the derivative of the cost function above
+    # For more information, check "gradient descent"
     @staticmethod
     def calculateGradient(theta, X, y):
         m, n = X.shape
@@ -106,13 +107,13 @@ class LearningAlgorithm(object):
     # This is the method that puts everything together to do the learning. 
     # 1) Resize our model parameters vector theta (n)
     # 2) Fill in features matrix X (m, n) from training data
-    # 3) Fill in results vector Y (m) from training data
+    # 3) Fill in results vector y (m) from training data
     # 4) Calculate theta such that 
-    #        Y ~ X * theta
+    #        y ~ sigmoid(X * theta)
     #    using the provided cost and gradient functions and the 
     #    BFGS algorithm for minimisation through iteration
     #
-    # For more info check SciPy documentation and BGFS algorithm
+    # For more info check SciPy documentation and BFGS algorithm
     def optimize(self, trainingData):
         self._theta.resize(trainingData.n)
         self._createTrainingInputMatrix(trainingData)
@@ -128,7 +129,7 @@ class LearningAlgorithm(object):
     # This function here is used to map the features (keywords) from a 
     # given (new) sentence into a vector x(n) so that it can be used with 
     # the calculated model parameters to calculate the probability
-    # of it been a "blocked" sentence or not. It assumes _common_words has
+    # of it being a "blocked" sentence or not. It assumes _common_words has
     # already been filled in by the training part.
     # 1) initialise x to n zeros
     # 2) lower case and stem each word on the input sentence
@@ -136,7 +137,7 @@ class LearningAlgorithm(object):
     #    then x(j) becomes 1
     def _createFeatureVect(self, input):
         x = numpy.zeros(len(self._common_words))
-        for i in input:
+        for i in input:  # I think this line is not needed either
             for word in input.x.split():
                 word = PorterStemmer().stem(word.lower())
                 if word in self._common_words:
