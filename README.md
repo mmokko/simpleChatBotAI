@@ -67,7 +67,11 @@ theta =  weight variable (this is the value calculated by the learning algorithm
 3. Create predict function to decide if the output is positive or negative.
    * Output value between 0..1 should be changed to binary output true or false.
 
-## Examples
+## Links
+### Machine learning libraries
+[Tensorflow](https://www.tensorflow.org/)  
+[Scikit-learn](http://scikit-learn.org/stable/)  
+[Keras](https://keras.io/)
+
+### Data
 [Spam assassin training data](http://spamassassin.apache.org/old/publiccorpus/)
-
-

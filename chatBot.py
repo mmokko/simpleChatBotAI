@@ -3,7 +3,7 @@ import scipy.optimize as optimize
 import operator
 from nltk import PorterStemmer
 
-# The sigmoid function is used to map the output of our 
+# The sigmoid function is used to map the output of our
 # prediction z = x * theta into a probability value (range [0, 1])
 def sigmoid(z):
     return 1 / (1 + (numpy.exp(-z)));
@@ -11,13 +11,13 @@ def sigmoid(z):
 
 class LearningAlgorithm(object):
     def __init__(self):
-        self._X = numpy.zeros(0)        # Matrix (m x n) - these will be the m rows of input features for training 
+        self._X = numpy.zeros(0)        # Matrix (m x n) - these will be the m rows of input features for training
                                         #                  (1 = keyword present, 0 = keyword not present)
         self._y = numpy.zeros(0)        # Vector (m) - these will be the m results (1 = blocked, 0 = not blocked)
         self._theta = numpy.zeros(0)    # Vector (n) - these will be the coefficients that we optimise
         self._common_words = list()     # These will be the list on n keywords that we will use as features
 
-    # This function finds the n most common words on the training data :) 
+    # This function finds the n most common words on the training data :)
     # These "common words" are our feature set.
     # What this function does is
     # 1) Gets one sentence in training data
@@ -45,12 +45,12 @@ class LearningAlgorithm(object):
     # 2) Then it goes through each of the m inputs of the training set and
     # 2.1) splits each sentence into words
     # 2.2) normalises each word by lowercasing and stemming (see note below)
-    # 2.3) if normalised word is found on the common words set, on index j, 
+    # 2.3) if normalised word is found on the common words set, on index j,
     #      X(i, j) becomes 1, otherwise it is zero
     #
     # So at the end of all this, we have matrix X(m, n) filled with 0 and 1
     # representing the m sentences of the training set, and for each sentence
-    # the information whether each of the n normalised common words was present 
+    # the information whether each of the n normalised common words was present
     # on the sentence or not
     def _findFeatureVector(self, trainingData):
         for i in range(0, trainingData.m):
@@ -70,7 +70,7 @@ class LearningAlgorithm(object):
         self._common_words = self.findMostCommonWords(trainingData)
         self._findFeatureVector(trainingData)
 
-    # This function fills in the vector y(m) from the training data, quite simply 
+    # This function fills in the vector y(m) from the training data, quite simply
     # copies whether the sentence was to be blocked (1) or not (0)
     def _createTrainingOutputVector(self, trainingData):
         self._y.resize(trainingData.m)
@@ -79,10 +79,10 @@ class LearningAlgorithm(object):
             self._y[i] = y
 
     # This is the cost function that we are trying to minimise.
-    # Basically it is used to compute "how far" our current model parameters (theta) 
-    # are from predicting the output values (y) on the training data inputs (X). 
+    # Basically it is used to compute "how far" our current model parameters (theta)
+    # are from predicting the output values (y) on the training data inputs (X).
     # The perfect match would be a cost of zero.
-    # For more info about this equation, check "cross-entropy" or "log loss" 
+    # For more info about this equation, check "cross-entropy" or "log loss"
     # cost function
     @staticmethod
     def calculateCost(theta, X, y):
@@ -92,7 +92,7 @@ class LearningAlgorithm(object):
         v2 = (1 - y).dot(numpy.log(1 - s))
         return 1 / m * numpy.sum(v1 - v2)
 
-    # This is the gradient function used to "step" our model parameters (theta) 
+    # This is the gradient function used to "step" our model parameters (theta)
     # to get us closer to an optimal point (the function we are trying to mimimise)
     # It uses the derivative of the cost function above
     # For more information, check "gradient descent"
@@ -104,13 +104,13 @@ class LearningAlgorithm(object):
         grad = 1 / m * (X.T.dot(numpy.transpose(s - y)))
         return grad.flatten()
 
-    # This is the method that puts everything together to do the learning. 
+    # This is the method that puts everything together to do the learning.
     # 1) Resize our model parameters vector theta (n)
     # 2) Fill in features matrix X (m, n) from training data
     # 3) Fill in results vector y (m) from training data
-    # 4) Calculate theta such that 
+    # 4) Calculate theta such that
     #        y ~ sigmoid(X * theta)
-    #    using the provided cost and gradient functions and the 
+    #    using the provided cost and gradient functions and the
     #    BFGS algorithm for minimisation through iteration
     #
     # For more info check SciPy documentation and BFGS algorithm
@@ -121,13 +121,13 @@ class LearningAlgorithm(object):
         self._theta = optimize.minimize(
             fun=self.calculateCost,
             x0=self._theta,
-            args=(self._X, self._y),
+            args=(self._X, self._y), # arguments for provided cost / gradient functions
             method='BFGS',
             jac=self.calculateGradient
         ).x
 
-    # This function here is used to map the features (keywords) from a 
-    # given (new) sentence into a vector x(n) so that it can be used with 
+    # This function here is used to map the features (keywords) from a
+    # given (new) sentence into a vector x(n) so that it can be used with
     # the calculated model parameters to calculate the probability
     # of it being a "blocked" sentence or not. It assumes _common_words has
     # already been filled in by the training part.
@@ -143,9 +143,9 @@ class LearningAlgorithm(object):
                 x[self._common_words.index(word)] = 1
         return x
 
-    # Finally, this is the function that decides if a sentence should be 
-    # blocked or not. 
-    # 1) calculates the feature vector x(n) that represents the sentence 
+    # Finally, this is the function that decides if a sentence should be
+    # blocked or not.
+    # 1) calculates the feature vector x(n) that represents the sentence
     # 2) calculates the vector product x*theta
     # 3) uses the sigmoid function to map the calculated value into a probability
     # 4) returns true if the probability >= 0.5 otherwise returns false :)
@@ -155,6 +155,6 @@ class LearningAlgorithm(object):
         return True if prob >= 0.5 else False
 
 
-# Note: normalising the words putting them all lowercase and using a stemmer, 
-#       makes the most out of a small data set by clumping together (into the 
+# Note: normalising the words putting them all lowercase and using a stemmer,
+#       makes the most out of a small data set by clumping together (into the
 #       same feature) similar words like: WORK, working, Worker...
