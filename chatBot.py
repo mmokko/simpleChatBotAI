@@ -137,11 +137,10 @@ class LearningAlgorithm(object):
     #    then x(j) becomes 1
     def _createFeatureVect(self, input):
         x = numpy.zeros(len(self._common_words))
-        for i in input:  # I think this line is not needed either
-            for word in input.x.split():
-                word = PorterStemmer().stem(word.lower())
-                if word in self._common_words:
-                    x[self._common_words.index(word)] = 1
+        for word in input.x.split():
+            word = PorterStemmer().stem(word.lower())
+            if word in self._common_words:
+                x[self._common_words.index(word)] = 1
         return x
 
     # Finally, this is the function that decides if a sentence should be 
