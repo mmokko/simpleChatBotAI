@@ -1,9 +1,9 @@
-from unittest import TestCase
+import unittest
 from chatBot import LearningAlgorithm
 import data
 
 
-class TestLearningAlgorithm(TestCase):
+class TestLearningAlgorithm(unittest.TestCase):
     def setUp(self):
         self.sut = LearningAlgorithm()
         self.sut.optimize(data)
@@ -15,3 +15,7 @@ class TestLearningAlgorithm(TestCase):
     def test_not_blocked(self):
         self.assertFalse(self.sut.blocked(data.CrossValidationData[2]))
         self.assertFalse(self.sut.blocked(data.CrossValidationData[3]))
+
+
+if __name__ == '__main__':
+    unittest.main()
