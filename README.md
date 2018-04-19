@@ -18,13 +18,13 @@ Based on email spam classifier algorithm.
 ### Finding features (inputs)
 
 Features x: Choose n amount of words indicative of sentence to block / not block.  
-Find most frequently occuring words in the training set. This is your feature vector.
+Find most frequently occuring words in the training set. This is your feature vector.  
 Optionally normalize the data:
 * Use stemmer software (Porter Stemmer).  
   For example word "story or stories" would be normalized to "stori"  
 ```python
 from nltk import PorterStemmer
-word = PorterStemmer.stem("stories")
+word = PorterStemmer().stem("stories")
 ```
 * Normalize all words to lowercase.
 * Fix misspellings.
@@ -42,7 +42,7 @@ Feature vector:
 This is the input value to machine learning algorithm.  
 
 ### Variables
-x = features of sentences (e-mail, chat...) 
+x = features of sentences (e-mail, chat...)  
 y = boolean classifier: block (1) or don't block (0)  
 n = number of features  
 m = number of training examples  
